@@ -4,6 +4,8 @@
 [![VS Code](https://img.shields.io/badge/VS%20Code-%5E1.85.0-007ACC?logo=visual-studio-code)](https://code.visualstudio.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 
+> [🇬🇧 English Version](README_EN.md)
+
 > *“旅行者，别发呆啦！派蒙陪你一起把今天的任务做完！”*
 
 让旅行者最好的伙伴 **派蒙** 陪伴你的 VS Code 工作之旅。她会用活泼可爱的方式督促进度、帮你启动番茄钟、在你低落时打气、在你摸鱼时提醒你，还会时不时开启美食频道。

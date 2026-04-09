@@ -160,6 +160,7 @@ export class PaimonChatPanel implements vscode.WebviewViewProvider {
       border-radius: 12px;
       font-size: 13px;
       line-height: 1.5;
+      animation: fadeIn 0.3s ease;
       word-wrap: break-word;
       display: flex;
       gap: 8px;
@@ -193,6 +194,19 @@ export class PaimonChatPanel implements vscode.WebviewViewProvider {
     }
     .msg.user .name { color: #d7dde8; text-align: right; }
     .msg.user .avatar { background: rgba(255, 255, 255, 0.16); }
+    .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 14px;
+      background: var(--paimon-gold);
+      margin-left: 2px;
+      animation: blink 0.6s infinite;
+      vertical-align: text-bottom;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
     .input-area {
       display: flex;
       padding: 8px 12px;
@@ -220,6 +234,11 @@ export class PaimonChatPanel implements vscode.WebviewViewProvider {
       cursor: pointer;
       font-weight: 600;
     }
+    #sendBtn:hover { opacity: 0.85; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -240,6 +259,10 @@ export class PaimonChatPanel implements vscode.WebviewViewProvider {
     const chat = document.getElementById('chat');
     const input = document.getElementById('userInput');
     const btn = document.getElementById('sendBtn');
+
+    let renderedCount = 0;
+    let typeQueue = [];
+    let isTyping = false;
 
     function send() {
       var t = input.value.trim();
@@ -266,8 +289,7 @@ export class PaimonChatPanel implements vscode.WebviewViewProvider {
     }
 
     function renderAll(msgs) {
-      chat.innerHTML = '';
-      for (var i = 0; i < msgs.length; i++) {
+      for (var i = renderedCount; i < msgs.length; i++) {
         var m = msgs[i];
         var div = document.createElement('div');
         div.className = 'msg ' + m.from;
@@ -285,14 +307,52 @@ export class PaimonChatPanel implements vscode.WebviewViewProvider {
         bubble.appendChild(name);
 
         var content = document.createElement('span');
-        content.textContent = m.text;
+        content.className = 'content';
         bubble.appendChild(content);
 
         div.appendChild(avatar);
         div.appendChild(bubble);
         chat.appendChild(div);
+
+        if (m.from === 'paimon') {
+          enqueueType(content, m.text);
+        } else {
+          content.textContent = m.text;
+        }
       }
+      renderedCount = msgs.length;
       chat.scrollTop = chat.scrollHeight;
+    }
+
+    function enqueueType(el, text) {
+      typeQueue.push({ el: el, text: text });
+      if (!isTyping) processQueue();
+    }
+
+    function processQueue() {
+      if (typeQueue.length === 0) { isTyping = false; return; }
+      isTyping = true;
+      var job = typeQueue.shift();
+      typeText(job.el, job.text, function() { processQueue(); });
+    }
+
+    function typeText(el, text, cb) {
+      var idx = 0;
+      var speed = text.length > 60 ? 20 : text.length > 30 ? 30 : 45;
+      var cur = document.createElement('span');
+      cur.className = 'typing-cursor';
+      el.appendChild(cur);
+      var timer = setInterval(function() {
+        if (idx < text.length) {
+          el.insertBefore(document.createTextNode(text[idx]), cur);
+          idx++;
+          chat.scrollTop = chat.scrollHeight;
+        } else {
+          clearInterval(timer);
+          if (cur.parentNode) cur.parentNode.removeChild(cur);
+          if (cb) cb();
+        }
+      }, speed);
     }
   </script>
 </body>
