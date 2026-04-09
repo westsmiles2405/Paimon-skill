@@ -1,0 +1,132 @@
+{
+    "name": "paimon-companion",
+    "displayName": "派蒙工作陪伴",
+    "description": "让旅行者的最佳伙伴派蒙陪伴你的 VS Code 工作之旅——活泼可爱的监督、番茄钟、吃货提醒、应急食品彩蛋",
+    "version": "0.1.0",
+    "publisher": "paimon-studio",
+    "license": "MIT",
+    "icon": "media/paimon-icon.png",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/westsmiles2405/Paimon-skill.git"
+    },
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "paimon-companion",
+                    "title": "派蒙",
+                    "icon": "media/paimon-icon.svg"
+                }
+            ]
+        },
+        "views": {
+            "paimon-companion": [
+                {
+                    "type": "webview",
+                    "id": "paimon.chatPanel",
+                    "name": "派蒙的冒险日志",
+                    "icon": "media/paimon-icon.svg"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "paimon.openStage",
+                "title": "派蒙：开启今日冒险",
+                "category": "Paimon"
+            },
+            {
+                "command": "paimon.startPomodoro",
+                "title": "派蒙：开始番茄钟专注",
+                "category": "Paimon"
+            },
+            {
+                "command": "paimon.stopPomodoro",
+                "title": "派蒙：结束番茄钟",
+                "category": "Paimon"
+            },
+            {
+                "command": "paimon.encourageMe",
+                "title": "派蒙：给我打气",
+                "category": "Paimon"
+            },
+            {
+                "command": "paimon.reviewWork",
+                "title": "派蒙：检查我的代码",
+                "category": "Paimon"
+            },
+            {
+                "command": "paimon.finale",
+                "title": "派蒙：今日收工",
+                "category": "Paimon"
+            },
+            {
+                "command": "paimon.foodTime",
+                "title": "派蒙：美食时间",
+                "category": "Paimon"
+            },
+            {
+                "command": "paimon.emergencyFood",
+                "title": "派蒙：应急食品",
+                "category": "Paimon"
+            },
+            {
+                "command": "paimon.nickname",
+                "title": "派蒙：取个绰号",
+                "category": "Paimon"
+            }
+        ],
+        "configuration": {
+            "title": "派蒙工作陪伴",
+            "properties": {
+                "paimon.pomodoroMinutes": {
+                    "type": "number",
+                    "default": 25,
+                    "description": "番茄钟专注时长（分钟）"
+                },
+                "paimon.breakMinutes": {
+                    "type": "number",
+                    "default": 5,
+                    "description": "休息时长（分钟）"
+                },
+                "paimon.enableIdleReminder": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "是否在长时间未操作时提醒"
+                },
+                "paimon.idleMinutes": {
+                    "type": "number",
+                    "default": 30,
+                    "description": "闲置多少分钟后提醒"
+                },
+                "paimon.enableStatusBar": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "是否在状态栏显示派蒙"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "lint": "eslint src --ext ts"
+    },
+    "devDependencies": {
+        "@types/node": "^20.11.0",
+        "@types/vscode": "^1.85.0",
+        "typescript": "^5.3.3"
+    }
+}
